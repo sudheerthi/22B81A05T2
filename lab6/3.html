@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>5-Day Weather Forecast</title>
+</head>
+<body>
+  <h1>5-Day Weather Forecast</h1>
+  <div>
+    <label for="forecastCity">Enter City: </label>
+    <input type="text" id="forecastCity" placeholder="e.g., Hyderabad" />
+    <button id="getForecast">Get Forecast</button>
+  </div>
+
+  <h2>Forecast Table</h2>
+  <table border="1" id="forecast-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Temperature (°C)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Forecast data will be inserted here -->
+    </tbody>
+  </table>
+
+  <script>
+    document.getElementById('getForecast').addEventListener('click', () => {
+      const city = document.getElementById('forecastCity').value;
+      const apiUrl = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&appid=929f942d88d42548b267a86ec151b776&units=metric`;
+
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          const tableBody = document.querySelector("#forecast-table tbody");
+          tableBody.innerHTML = ""; // Clear existing data
+
+          data.list.forEach(item => {
+            const date = new Date(item.dt * 1000).toLocaleDateString();
+            const temp = item.main.temp;
+
+            const row = document.createElement("tr");
+            row.innerHTML = `
+              <td>${date}</td>
+              <td>${temp}°C</td>
+            `;
+            tableBody.appendChild(row);
+          });
+        })
+        .catch(error => console.error('Error fetching forecast data:', error));
+    });
+  </script>
+</body>
+</html>

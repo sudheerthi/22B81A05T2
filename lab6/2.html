@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather for Any City</title>
+</head>
+<body>
+  <h1>Get Weather Details</h1>
+  <div>
+    <label for="city">Enter City: </label>
+    <input type="text" id="city" placeholder="e.g., Hyderabad" />
+    <button id="getWeather">Get Weather</button>
+  </div>
+
+  <h2>Weather Details</h2>
+  <div id="weather-info">
+    
+  </div>
+
+  <script>
+    document.getElementById('getWeather').addEventListener('click', () => {
+      const city = document.getElementById('city').value;
+      const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=929f942d88d42548b267a86ec151b776&units=metric`;
+
+      fetch(apiUrl)
+        .then(response => response.json())
+        .then(data => {
+          if (data.cod === 200) {
+            
+            const weatherInfo = `
+              <h3>${data.name}</h3>
+              <p>Min Temp: ${data.main.temp_min}°C</p>
+              <p>Max Temp: ${data.main.temp_max}°C</p>
+              <p>Humidity: ${data.main.humidity}%</p>
+            `;
+            document.getElementById('weather-info').innerHTML = weatherInfo;
+          } else {
+            document.getElementById('weather-info').innerHTML = "<p>City not found. Please try again.</p>";
+          }
+        })
+        .catch(error => console.error('Error fetching weather data:', error));
+    });
+  </script>
+</body>
+</html>
